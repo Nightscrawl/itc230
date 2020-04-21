@@ -1,4 +1,4 @@
-const http = require("http"), fs = require("fs"), nov = require("./data");
+const http = require("http"), fs = require("fs"), nov = require("./lib/data");
 
 http.createServer( (req,res) => {  // callback, function to be invoked later
 
