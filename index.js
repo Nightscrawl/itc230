@@ -1,4 +1,4 @@
-const http = require("http"), fs = require("fs"), nov = require("./lib/data");
+const http = require("http"), fs = require("fs"), novels = require("./lib/data.js");
 
 http.createServer( (req,res) => {  // callback, function to be invoked later
 
@@ -7,7 +7,7 @@ http.createServer( (req,res) => {  // callback, function to be invoked later
     switch(path) {
         case '/':
             res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end(`There are ${nov.amtNovels} novels in the Dragon Age series.`);  // http://localhost:3000
+            res.end(`There are ${novels.getAll().length} novels in the Dragon Age series.`);  // http://localhost:3000
             break;
 
         case '/about':
