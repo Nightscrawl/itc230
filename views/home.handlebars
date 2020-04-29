@@ -1,0 +1,8 @@
+{{!-- <h2>Welcome: {{name}}</h2> --}}
+
+<h2>Dragon Age novels:</h2>
+<ul>
+    {{#each books}}
+        <a href="/detail?{{title}}"><li>{{title}}</li></a>
+    {{/each}}
+</ul>

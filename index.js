@@ -1,33 +1,29 @@
 'use strict'
-const express = require("express");  // pulls in express and other modules
-const bodyParser = require("body-parser");
-const hbars = require("express-handlebars");
+const express = require('express');  // pulls in express and other modules
+const bodyParser = require('body-parser');
+const hbars = require('express-handlebars');
 
 const app = express();  // creates instance of express app (general convention is "app")
+app.engine('handlebars', hbars({defaultLayout: false}));  // look for files with .handlebars extension and process them with handlebars (pulled in above)
+app.set('view engine', 'handlebars');  // view engine should use hbars for processing templates
 
 app.set('port', process.env.PORT || 3000);
 // app.use(express.static(__dirname + '/cheese'));  // set location for static files -- css, html, js etc
-// app.use(bodyParser.urlencoded({extended: true}));  // parse form submissions
-app.engine('handlebars', hbars({defaultLayout: false}));  // look for files with .handlebars extension and process them with handlebars (pulled in above)
-app.set("view engine", "handlebars");  // view engine should use hbars for processing templates
+app.use(bodyParser.urlencoded({extended: true}));  // parse form submissions
 
 
 // APP START ----------------------------------------------
 
-const novels = require("./lib/data.js");
+const novels = require('./lib/data.js');
 
 app.get('/', (req, res) => {
-    res.type('text/plain');  // switch type to /html for html files
-    res.send(`There are ${novels.getAll().length} novels in the Dragon Age series.`);  // http://localhost:3000
-
-    // OR
-    // res.sendFile(__dirname + '/public/home.html');  // load an html file instead
-
+    // res.render('home');
+    // res.render('home', {name: req.query.name});
+    res.render('home', {books: novels.getAll()});
 });
 
-app.get('/about', (req, res) => {
-    res.type('text/plain');
-    res.send(`My name is Kira Abell. I am working toward my AAS in web development at Seattle Central College.`);  // http://localhost:3000/about
+app.get('/detail', (req, res) => {
+    res.render('detail');
 });
 
 app.use( (req, res) => {
