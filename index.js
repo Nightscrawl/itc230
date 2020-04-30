@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/detail', (req, res) => {
-    res.render('detail');
+    res.render('detail', {novel: req.query.item});
 });
 
 app.use( (req, res) => {
