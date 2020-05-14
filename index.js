@@ -15,27 +15,36 @@ app.use(bodyParser.urlencoded({extended: true}));  // parse form submissions
 
 // APP START ----------------------------------------------
 
-// const novels = require('./lib/data.js');
-
-// app.get('/', (req, res) => {
-//     // res.render('home');
-//     // res.render('home', {name: req.query.name});
-//     res.render('home', {books: novels.getAll()} );
-// });
-
-
 app.get('/', (req, res, next) => {
-    Novel.find({}, (err, items) => {
-      if (err) return next(err);
-      console.log(items.length);
-      res.render('home', {books: items }); 
-    });
-  });
-
-
-app.get('/detail', (req, res) => {
-    res.render('detail', {novel: req.query.item});
+  Novel.find({}).lean()
+    .then((books) => {
+        res.render('home', { books });
+    })
+    .catch(err => next(err));
 });
+
+
+app.get('/detail', (req, res, next) => {
+  Novel.find({}).lean()
+    .then((book) => {
+        res.render('detail', { book: req.query.item });
+    })
+    .catch(err => next(err));
+});
+
+
+app.get('/delete', (req, res, next) => {
+  return Novel.deleteOne( { "title": req.query.item } ).lean()
+    .then( (result) => {
+      res.type('text/html');
+      res.send( `${req.query.item} has been deleted.
+        <br />
+        <br />
+        <a href="/">Back to home.</a>` );
+    })
+    .catch(err => next(err));
+});
+
 
 app.use( (req, res) => {
     res.type('text/plain');
