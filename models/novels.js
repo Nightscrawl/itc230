@@ -25,7 +25,6 @@ const mySchema = mongoose.Schema({
  publisher: String,
  date: Date,
  pages: Number,
- notes: String
-}); 
+ notes: String }, {versionKey: false} ); 
 
 module.exports = mongoose.model('danovel', mySchema);
