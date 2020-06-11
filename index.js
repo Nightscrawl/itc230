@@ -21,7 +21,8 @@ app.use( '/api', require('cors')() );  // set access-control-allow-origin header
 app.get('/', (req, res, next) => {
   Novel.find({}).lean()
     .then((books) => {
-        res.render( 'home', { books } );
+        // res.render( 'home', { books } );
+        res.render('home', {books: JSON.stringify(books)});
     })
     .catch(err => next(err));
 });

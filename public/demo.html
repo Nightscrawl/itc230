@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title>React Testing Demo</title>
+        <meta name="author" content="K. Abell" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,inital-scale=1" />
+        <meta name="robots" content="noindex,nofollow" />
+        <!-- <link href="css/style.css" rel="stylesheet" /> -->
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    
+    <body>
+    
+        <div id="root"></div>
+        <!-- a dom element that is the root of the react app, which react is controlling -->
+        <!-- essentially a container div for the entire front end react app -->
+    
+    
+    
+    
+        <script type="text/babel">  // allows babel to do translation re html, etc, otherwise get an error and page doesn't render
+
+            // const greeting = <h1 className="greeting">Hi there!</h1>;  // defines a componenet
+
+            // jsx explainer; babel allows us to translate
+            // const Greeting = {  // object called greeting
+            //     type: "h1",  // object's type is the <h1> tag
+            //     props: {  // has the two properties, className and the child string
+            //         className: "greeting",
+            //         children: "Hi there!"
+            //     }
+            // };
+            // same as above
+            // everything in react is an object with a type and props
+
+            // ReactDOM.render( greeting, document.getElementById("root") );  // shoves the component into the container div
+
+
+            // const getGreeting = (user) => {
+            //     if(user) {
+            //         return <h1>Hello, {user}!</h1>;
+            //     }
+            //     return <h1>Hello, Stranger.</h1>
+            // }
+
+            // const greeting = getGreeting("Kira");
+
+            // ReactDOM.render( greeting, document.getElementById("root") );  // shoves the component into the container div
+
+
+            // const Welcome = (props) => {  // defining component enables use as html element
+            //     console.log(props);
+            //     if(props.name == "Trevelyan") {
+            //         return <p>Dorian loves you!</p>;
+            //     }
+
+            //     return <h1>Greetings, {props.title} {props.name}</h1>; 
+            // }
+
+            // ReactDOM.render( <Welcome name="Trevelyan" title="Inquisitor" />, document.getElementById("root") );  // shoves the component into the container div
+
+
+            // class Clock extends React.Component {
+            //     constructor(props) {
+            //         super(props);
+
+            //         let now = new Date();
+            //         let offset = (props.offset) ? Number(props.offset) : 0  // if offset exists, and should be number, otherwise set to 0
+            //         if(props.offset) {
+            //             now.setHours(Number(props.offset));
+            //         }
+
+            //         // this.state = {date: new Date()};
+            //         this.state = {date: now, offset: offset};
+            //     }
+
+            //     componentDidMount() {
+            //         this.timerID = setInterval(
+            //         () => this.tick(),
+            //         1000
+            //         );
+            //     }
+
+            //     componentWillUnmount() {
+            //         clearInterval(this.timerID);
+            //     }
+
+            //     tick() {
+            //         // this.setState( {date: new Date() } );
+            //         let now = new Date();
+            //         now.setHours(this.state.offset)
+            //         this.setState({
+            //             // date: new Date().setHours(this.state.offset)
+            //             date: now
+            //         });
+            //     }
+
+            //     render() {
+            //         return (
+            //             <div>
+            //                 <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+            //             </div>
+            //         );
+            //     }
+
+            // }
+            
+
+
+            // const App = () => {  // define a component that renders other components
+            //     return (
+            //         <div>
+            //             <Welcome name="Trevelyan" title="Inquisitor" />
+            //         </div>
+            //     );
+            // }
+
+            // <Clock />
+            // <Clock offset="-3" />
+
+            // ReactDOM.render( <App />, document.getElementById("root") );
+
+
+
+            let DragonAgeNovels = [
+
+                { title: 'The Stolen Throne',
+                author: 'David Gaider',
+                year: 2009,
+                pages: 400 },
+
+                { title: 'The Calling',
+                author: 'David Gaider',
+                year: 2009,
+                pages: 448 },
+
+                { title: 'Asunder',
+                author: 'David Gaider',
+                year: 2011,
+                pages: 448 },
+
+                { title: 'The Masked Empire',
+                author: 'Patrick Weekes',
+                year: 2014,
+                pages: 384 },
+
+                { title: 'Last Flight',
+                author: 'Liane Merciel',
+                year: 2014,
+                pages: 301 }
+            ];
+
+            const BookIndex = (props) => {
+                console.log(props)
+
+                const book_list = props.books.map((item) => {
+                    return (
+                        <li onClick={props.clickHandler} key={item.title}>{item.title}</li>
+                    );
+                });
+                // props get passed on render
+                // one of those props is an array, "books"
+                // each book has a title
+
+                return (
+                    <div>
+                        <h1>Dragon Age Book List</h1>
+                        <ul>
+                            {book_list}
+                        </ul>
+                        <hr />
+                    </div>
+                );
+            }
+
+            const BookDetail = (props) => {
+                return (
+                    <div>
+                        <h2>Details for {props.book.title}:</h2>
+                        <ul>
+                            <li>{props.book.author}</li>
+                            <li>{props.book.year}</li>
+                            <li>{props.book.pages}</li>
+                        </ul>
+                    </div>
+                );
+            }
+
+            // const App = () => {
+            //     return (
+            //         <div>
+            //             <BookIndex books={DragonAgeNovels} />
+            //             <BookDetail />
+            //         </div>
+            //     );
+            // }
+            // // passing in array books as props
+
+            // ReactDOM.render( <App />, document.getElementById("root") );
+
+
+            class App extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        currentBook: {}
+                    };
+                    // on render, current book is empty
+
+                    // This binding is necessary to make `this` work in the callback
+                    this.handleClick = this.handleClick.bind(this);
+                }
+                // binding the handleClick function to the App in a way that allows passing to child components - see BookIndex as child
+
+                handleClick(e) {
+                    let title = e.target.innerText;
+                    
+                    let newBook = DragonAgeNovels.find((item) => {
+                        return item.title == title;
+                    });
+                    // look at each item
+                    // find book whose title matches the target of the click
+
+                    console.log(e.target.innerText);
+                    console.log(newBook);
+
+                    this.setState(state => ({
+                        currentBook: newBook
+                    }));
+                }
+                // function that is attribute of App class
+
+                render() {
+                    return (
+                        <div>
+                            <BookIndex books={DragonAgeNovels} clickHandler={this.handleClick} />
+                            <BookDetail book={this.state.currentBook} />
+                        </div>
+                    );
+                }
+            }
+
+
+            ReactDOM.render( <App />, document.getElementById("root") );
+
+
+
+            
+
+        </script>
+
+
+    
+    </body>
+    
+</html>

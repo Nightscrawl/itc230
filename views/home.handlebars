@@ -1,6 +1,113 @@
-<h2>Dragon Age Novels:</h2>
+{{!-- <h2>Dragon Age Novels:</h2>
 <ul>
     {{#each books}}
         <a href="/detail?item={{title}}"><li>{{title}}</li></a>
     {{/each}}
-</ul>
+</ul> --}}
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title>Dragon Age Books</title>
+        <meta name="author" content="K. Abell" />
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,inital-scale=1" />
+        <meta name="robots" content="noindex,nofollow" />
+        <!-- <link href="css/style.css" rel="stylesheet" /> -->
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    
+    <body>
+
+        <div id="root"></div>
+
+
+        <script type="text/babel">
+
+            const BookIndex = (props) => {
+                // console.log(props)
+
+                const book_list = props.books.map((item) => {
+                    return (
+                        <li onClick={props.clickHandler} key={item._id}>{item.title}</li>
+                    );
+                });
+                // props get passed on render
+                // one of those props is an array, "books"
+                // each book has a title
+
+                return (
+                    <div>
+                        <h1>Dragon Age Book List</h1>
+                        <ul>
+                            {book_list}
+                        </ul>
+                        <hr />
+                    </div>
+                );
+            }
+
+            const BookDetail = (props) => {
+                return (
+                    <div>
+                        <h2>Details for {props.book.title}</h2>
+                        <p>Author: {props.book.author}</p>
+                        <p>Publisher: {props.book.publisher}</p>
+                        <p>Release Date: {props.book.date}</p>
+                        <p>Pages: {props.book.pages}</p>
+                        <p>Notes: {props.book.notes}</p>
+                    </div>
+                );
+            }
+
+            class App extends React.Component{
+
+                constructor(props){
+                    super(props);  // Set initial state using data from server application
+
+                    this.state = {
+                        allBooks: {{{ books }}},  // provided by the route -- DO NOT ADD WHITE SPACE
+                        currentBook: {}  // current selected item; on render, current book is empty
+                    };
+
+                    this.handleClick = this.handleClick.bind(this);  // This binding is necessary to make `this` work in the callback
+                }
+
+                handleClick(e) {
+                    let title = e.target.innerText;
+
+                    let newBook = this.state.allBooks.find((item) => {
+                        return item.title == title;
+                    });
+                    // look at each item
+                    // find book whose title matches the target of the click
+
+                    // console.log(e.target.innerText);
+                    // console.log(newBook);
+
+                    this.setState(state => ({
+                        currentBook: newBook
+                    }));
+                }
+                // function that is attribute of App class
+
+                render() {
+                    return (
+                        <div>
+                            <BookIndex books={this.state.allBooks} clickHandler={this.handleClick} />
+                            <BookDetail book={this.state.currentBook} />
+                        </div>
+                    );
+                }
+            }
+
+            ReactDOM.render(<App />, document.getElementById('root'));
+
+        </script>    
+    
+    </body>
+    
+</html>
