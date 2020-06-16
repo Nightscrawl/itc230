@@ -50,7 +50,7 @@
                 );
             }
 
-            const BookDetail = (props) => {
+            const BookDetail = (props) => {  // THIS IS OLD, NOT USED
                 return (
                     <div>
                         <h2>Details for {props.book.title}</h2>
@@ -59,6 +59,42 @@
                         <p>Release Date: {props.book.date}</p>
                         <p>Pages: {props.book.pages}</p>
                         <p>Notes: {props.book.notes}</p>
+                    </div>
+                );
+            }
+
+            const BookInfo = (props) => {
+                return (
+                    <div>
+                        <form>
+                            <p>
+                                Title: <input onChange={props.changeHandler} type="text" name="title" value={props.book.title || ""} />
+                            </p>
+
+                            <p>
+                                Author: <input onChange={props.changeHandler} type="text" name="author" value={props.book.author || ""} />
+                            </p>
+
+                            <p>
+                                Publisher: <input onChange={props.changeHandler} type="text" name="publisher" value={props.book.publisher || ""} />
+                            </p>
+
+                            <p>
+                                Release Date: <input onChange={props.changeHandler} type="text" name="date" value={props.book.date || ""} />
+                            </p>
+
+                            <p>
+                                Pages: <input onChange={props.changeHandler} type="text" name="pages" value={props.book.pages || ""} />
+                            </p>
+
+                            <p>
+                                Notes: <textarea onChange={props.changeHandler} type="text" name="notes" value={props.book.notes || ""}></textarea>
+                            </p>                            
+                        </form>
+                        <button onClick={props.save}>Save</button> 
+                        <button onClick={props.clear}>Clear</button> 
+                        <button onClick={props.delete}>Delete</button>
+
                     </div>
                 );
             }
@@ -74,6 +110,10 @@
                     };
 
                     this.handleClick = this.handleClick.bind(this);  // This binding is necessary to make `this` work in the callback
+                    this.onChange = this.onChange.bind(this);
+                    this.onSave = this.onSave.bind(this);
+                    this.onClear = this.onClear.bind(this);
+                    this.onDelete = this.onDelete.bind(this);
                 }
 
                 handleClick(e) {
@@ -94,11 +134,58 @@
                 }
                 // function that is attribute of App class
 
+                onChange(e) {
+                    let newItem = this.state.currentBook;
+                    newItem[e.target.name] = e.target.value;
+                    this.setState({currentBook: newItem});
+                }
+
+                onSave() {
+                    let newItem = this.state.currentBook;
+                    delete newItem["_id"];
+                    fetch("/api/books/update", {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newItem)
+                    })
+                        .then(res => res.json())
+                        .then((result) => {
+                            console.log(result);
+
+                            const newList = this.state.allBooks;  // adds the new book to the array
+                            newList.push(newItem);
+                            this.setState({allBooks: newList});  // updates the list to show new added book
+
+                        })
+                        .catch(err => console.log(err))
+                }
+
+                onClear() {
+                    this.setState({ currentBook: {} });
+                }
+
+                onDelete() {
+                    let delBook = this.state.currentBook;
+                    fetch("/api/books/delete/"+delBook.title)
+                        .then(res => res.json())
+                        .then((result) => {
+                            // console.log(result);
+
+                            const newList = this.state.allBooks.filter((book) => {
+                                return book.title !== delBook.title;
+                            });  // look at each item and if not same by title, delete
+
+                            this.setState({allBooks: newList});
+                        })
+                        .then(this.setState({ currentBook: {} }) )  // clears form fields after book is deleted
+                        .catch(err => console.log(err))
+                }
+
                 render() {
                     return (
                         <div>
                             <BookIndex books={this.state.allBooks} clickHandler={this.handleClick} />
-                            <BookDetail book={this.state.currentBook} />
+                            <BookInfo book={this.state.currentBook} changeHandler={this.onChange} save={this.onSave} clear={this.onClear} delete={this.onDelete} />
                         </div>
                     );
                 }

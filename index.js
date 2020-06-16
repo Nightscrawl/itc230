@@ -13,6 +13,7 @@ app.set('view engine', 'handlebars');  // view engine should use hbars for proce
 app.set('port', process.env.PORT || 3000);
 // app.use( express.static(__dirname + '/cheese') );  // set location for static files -- css, html, js etc
 app.use( bodyParser.urlencoded({extended: true}) );  // parse form submissions
+app.use( bodyParser.json() );
 app.use( '/api', require('cors')() );  // set access-control-allow-origin header for api route
 
 
@@ -71,13 +72,13 @@ app.get('/api/books/:title', (req, res, next) => {
 
 
 // delete a single book via title
-app.post('/api/books/delete', (req, res) => {
-  Novel.deleteOne( {title: req.body.title}, (err, result) => {
+app.get('/api/books/delete/:title', (req, res) => {
+  Novel.deleteOne( { "title": req.params.title }, (err, result) => {
     if(err) {
       throw err;
     } else {
       if (result.deletedCount == 1) {
-        console.log(`${req.body.title} was deleted.`);
+        console.log(`${req.params.title} was deleted.`);
       }      
       res.json(result);
     }
